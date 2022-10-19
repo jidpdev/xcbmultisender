@@ -14,11 +14,11 @@ contract Multisender {
     IERC20Metadata public tokenContract;
     uint256 public walletMaxAllowed;
     address[] internal walletAccounts;
-	uint256[] internal walletAmounts;
-	uint256 public totalAmountToSend;
+    uint256[] internal walletAmounts;
+    uint256 public totalAmountToSend;
     uint256 public totalWalletsToSend;
 	
-	event Sent(address _from, address _to, uint256 _amount);
+    event Sent(address _from, address _to, uint256 _amount);
 	
     constructor (
                 IERC20Metadata _tokenContract, 
@@ -56,14 +56,14 @@ contract Multisender {
         walletAccounts = _accounts;
         totalWalletsToSend = _accounts.length;
         walletAmounts = _amounts;
-		totalAmountToSend = 0;
+	totalAmountToSend = 0;
         for (uint256 _index = 0; _index < _accounts.length; _index++) {
 			totalAmountToSend += _amounts[_index];
 		}
     } 	
 	
     function updateContractSettings(IERC20Metadata _tokenContract, uint256 _walletMaxAllowed) external onlyOwner {
-		tokenContract = _tokenContract;
+	tokenContract = _tokenContract;
         walletMaxAllowed = _walletMaxAllowed;
     } 	
 
@@ -75,17 +75,17 @@ contract Multisender {
 	// Go!
 
     function goMultisender() external onlyOwner {
-		    processDelivery(tokenContract, walletAccounts, walletAmounts);
+	processDelivery(tokenContract, walletAccounts, walletAmounts);
     } 	
 
     function processDelivery(IERC20Metadata _token, address[] memory _accounts, uint256[] memory _amounts) internal {
         require(_accounts.length == _amounts.length, "Error. The accounts size and amounts size not equals.");
         require(_accounts.length <= walletMaxAllowed, "Error. The number of accounts exceeds the maximum limit.");
-		require(totalAmountToSend <= _token.balanceOf(address(this)), "Error. Insufficient balance.");
+	require(totalAmountToSend <= _token.balanceOf(address(this)), "Error. Insufficient balance.");
         for (uint256 _index = 0; _index < _accounts.length; _index++) {
             _token.transfer( _accounts[_index], _amounts[_index]);
-			emit Sent(address(this), _accounts[_index], _amounts[_index]);
-		}
+	    emit Sent(address(this), _accounts[_index], _amounts[_index]);
+	}
     }	
 
 }	
