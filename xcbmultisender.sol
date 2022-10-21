@@ -4,7 +4,7 @@
 // This smart contract is created by the Community and is not affiliated with Crypto Birds Platform.
 // Please visit cryptobirds.com if you are looking for official information.
 
-pragma solidity ^0.8.16;
+pragma solidity 0.8.17;
 
 import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 
@@ -58,8 +58,8 @@ contract Multisender {
         walletAmounts = _amounts;
 	totalAmountToSend = 0;
         for (uint256 _index = 0; _index < _accounts.length; _index++) {
-			totalAmountToSend += _amounts[_index];
-		}
+		totalAmountToSend += _amounts[_index];
+	}
     } 	
 	
     function updateContractSettings(IERC20Metadata _tokenContract, uint256 _walletMaxAllowed) external onlyOwner {
@@ -75,7 +75,7 @@ contract Multisender {
 	// Go!
 
     function goMultisender() external onlyOwner {
-	processDelivery(tokenContract, walletAccounts, walletAmounts);
+	    processDelivery(tokenContract, walletAccounts, walletAmounts);
     } 	
 
     function processDelivery(IERC20Metadata _token, address[] memory _accounts, uint256[] memory _amounts) internal {
@@ -84,7 +84,7 @@ contract Multisender {
 	require(totalAmountToSend <= _token.balanceOf(address(this)), "Error. Insufficient balance.");
         for (uint256 _index = 0; _index < _accounts.length; _index++) {
             _token.transfer( _accounts[_index], _amounts[_index]);
-	    emit Sent(address(this), _accounts[_index], _amounts[_index]);
+            emit Sent(address(this), _accounts[_index], _amounts[_index]);
 	}
     }	
 
